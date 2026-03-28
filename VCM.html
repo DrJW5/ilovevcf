@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="thumbnail" content="https://ilovevcf.com/logo.png">
+	<meta name="description" content="Display the full content of your vCard (.vcf file) contacts in one large board to edit them with ease and complete privacy, all in your web browser.">
+	<meta property="og:locale" content="en_US">
+	<meta property="og:title" content="VCard Manager">
+	<meta property="og:url" content="https://ilovevcf.com/">
+	<meta property="og:image" content="https://ilovevcf.com/logo.png">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="ilovevcf">
+	<meta property="og:description" content="Display the full content of your vCard (.vcf file) contacts in one large board to edit them with ease and complete privacy, all in your web browser.">
+	<link rel="icon" href="favicon.ico">
+	<link rel="canonical" href="https://ilovevcf.com/">
+	<title>VCard Manager</title>
+	<style>
+		body				{background-color: #EEEEEE; font-family: Helvetica;}
+		h1					{font-size: 50px; margin-top: 0px; margin-bottom: 0px; color: #7F9CCB;}
+		h4					{font-size: 14px; font-weight: normal; text-align: center; background-color:#FFCCCC;}
+		h5					{font-size: 12px; font-weight: normal; text-align: center; width: 500px;}
+		a 					{color: #000000; text-decoration: none;}
+		img 				{width: 70px; height: auto; display: none; margin-top: -80px; margin-left: 30px; position: absolute;}
+		label 				{background-color: #7F9CCB; padding: 10px; border-radius: 8px; font-size: 20px; border: none; cursor: pointer;}
+		label:hover			{background-color: #2D5BA3; color: #FFFFFF;}
+		button				{background-color: #7F9CCB; padding: 10px; border-radius: 8px; font-size: 20px; border: none; cursor: pointer;}
+		button:hover		{background-color: #2D5BA3; color: #FFFFFF;}
+		.button1 			{background-color: #F5756C; padding: 1px; border-radius: 0px; font-size: 10px; width: 15px; height: 15px; vertical-align: 1px;}
+		.button1:hover 		{background-color: #F44336;}
+		.button2 			{background-color: #F5C951; padding: 1px; border-radius: 0px; font-size: 10px; width: 15px; height: 15px; vertical-align: 1px;}
+		.button2:hover 		{background-color: #F7B807;}
+		.button2:hover img 	{display: block; position: absolute;}
+		.button3 			{background-color: inherit; padding: 1px; border-radius: 0px; font-size: 10px; width: 15px; height: 15px; vertical-align: 1px; cursor: auto;}
+		.button3:hover 		{background-color: inherit; cursor: auto;}
+		.button4 			{background-color: #FFCC99; padding: 6px; border-radius: 8px; font-size: 12px; cursor: pointer;}
+		.button4:hover 		{background-color: #FF8000; cursor: pointer;}
+		.center 			{display: flex; justify-content: center; align-items: center;}
+		.tableau	 		{width: fit-content; margin-left: auto; margin-right: auto;}
+		.tip 				{position: relative; display: inline-block; border-bottom: 1px dotted black; cursor: pointer;}
+		.tiptxt 			{visibility: hidden; font-size: 12px; width: 135px; top: -20px; left: 105%; background-color: #7F9CCB; color: #000000; text-align: center; border-radius: 5px; padding: 1px; position: absolute; z-index: 1;}
+		.tip:hover .tiptxt 	{visibility: visible;}
+		table tr:first-child > *, td:first-child {text-align: center;}
+		input				{border: 1px solid #999999; border-radius: 2px; outline-color: #282828; margin-right: 0px;}
+		input:focus			{border: 1px solid #2D5BA3; border-radius: 2px; outline: 2px solid #2D5BA3; background-color:#B7C7E1;}
+		input.para0			{border: 1px solid #999999; border-radius: 2px; outline-color: #282828; background-color:#FFD9B3; width:70px; display:none;}
+		input.para0:focus	{border: 1px solid #FF8000; border-radius: 2px; outline: 2px solid #FF8000; background-color:#FFD9B3;}
+		input.para1			{border: 1px solid #999999; border-radius: 2px; outline-color: #282828; background-color:#FFD9B3; width:70px; margin-left: 12px; display:inline;}
+		input.para1:focus	{border: 1px solid #FF8000; border-radius: 2px; outline: 2px solid #FF8000; background-color:#FFD9B3;}
+		input.para2			{border: 1px solid #999999; border-radius: 2px; outline-color: #282828; background-color:#FFCCCC; display:inline;}
+		input.para2:focus	{border: 1px solid #FF6666; border-radius: 2px; outline: 2px solid #FF6666; background-color:#FFCCCC;}
+	</style>
+</head>
+<body>
+	<div class="center"><h1>vCard Manager</h1></div>
+	<div class="center">
+		<h5>
+			vCard (.vcf files) is a <a href="https://en.wikipedia.org/wiki/VCard"><u>standard</u></a> to store and exchange a variety of information about 
+			individuals and other entities, such as names, phone numbers, emails, etc. It is commonly used by "contacts" apps on phones or laptops.<br>
+			This tool helps you visualize and edit your contacts and their infos as a large array.<br>
+			You should be able to export your contacts as a .vcf file from the settings of your contact app. You can then open and edit
+			this file on this webpage. Once you are done with your edits, you can save a new .vcf file and import it in any compatible contact app.<br>
+		</h5>
+	</div>
+	<div class="center"><label for="UPVCF">Open a VCF file</label> <input type="file" style="display:none;" id="UPVCF" accept=".vcf" onchange="loadVCF()"/></div><br>
+	<div class="center"><span id="para"></span></div>
+	<div class="center"><span id="warn"></span></div><br>
+	<div class="tableau"><span id="board"></span></div><br><br>
+	<div class="center"><button onclick="saveTextAsFile()">Save VCF file</button></div>
+	<div class="center">
+		<h5 id="st2"><hr>
+			Design & Code: Dr. Jordi Weiss<br>
+			<a href="#" onclick="if(theme==0){document.body.style.backgroundColor='#333333'; theme=1;} else if(theme==1) {document.body.style.backgroundColor='#EEEEEE'; theme=0;}">☼</a><br>
+			Privacy notice: No data is collected, all treatments happen strictly on your machine.<br>
+			I do not see any of your data, I do not know anything about your identity, nor do I want to.<br> 
+			My hosting provider may see your IP address, just like any website you visit.<br>
+			I do not record or create any database of IP addresses of this website's visitors.<br>
+			I may display one banner ad to support hosting costs. If you enjoy the service, don't block it.<br>
+		</h5>
+	</div>
+<script>
+
+var init = 0;																												// Know if it's an initial load or a reload
+var par = 0;																												// Show or don't show parameters
+var theme = 0;																												// Dark or light theme
+var contacts = "";																											// Array to store contacts
+var savecont = "";																											// Array to store original state of contacts
+var idc = 1;																												// ID for columns to allow deletion
+var idt = [];																												// Array to match global columbs ID to their code
+var NB = [];																												// Maximum number of fields
+
+var PROP = ["", "TEL", "EMAIL", "ADR", "BDAY", "ANNIVERSARY", "FBURL", "CATEGORIES", "CLIENTPIDMAP", "GENDER", "GEO", "IMPP", "KEY", "KIND", "LANG", "CALADRURI", "CALURI", "LOGO", "MEMBER", "NICKNAME", "NOTE", "ORG", "RELATED", "ROLE", "PHOTO", "SOUND", "SOURCE", "TITLE", "TZ", "UID", "URL", "XML", "PRODID", "REV"];
+var CODE = ["N", "T", "M", "A", "B", "ß", "F", "C", "H", "G", "E", "I", "K", "J", "L", "D", "Ä", "È", "Y", "Z", "É", "O", "R", "Ï", "P", "S", "Ç", "Ý", "Ø", "U", "V", "X", "Q", "Ê"];
+var Tips = ["", "Phone number", "Email address", "Postal address. Format should be: Street;City;Region; Postcode;Country", "Birthday", "Anniversary", "A URL that shows when the person is free or busy on their calendar", "A list of tags to describe the contact", "Used for synchronizing different revisions of the same vCard", "Gender", "Specifies a location with a latitude and longitude separated by a comma", "Instant messenger handle", "Public encryption key", "Defines the type of entity represented. Values should be: application, individual, group, location or organization", "language. Format should be language-tag such as XX or XX-XX", "A URL for sending scheduling requests to the contact's calendar", "A URL to the contact's calendar", "An image or graphic of the logo. Format should be a URL or a base64 code", "Defines a member that is part of the group that this vCard represents. Format should be a UID or a mailto URL. This property should only be used if the KIND property is set to group", "Nickname", "A text note", "Name or organization or unit", "Another entity that the contact is related to", "Role, occupation or business category", "An image or photo that reprensents the contact", "A sound, usually to specify the pronunciation of the name", "A URL that can be used to get the latest version of this vCard", "The job title, functional position or function of the contact", "Time zone", "Unique identification code", "A URL to a website", "XML data", "ID of the product that created this vCard, if you modify the vCard using this tool, it will take the name of this tool. This property is automatic, you cannot modify it manually", "A timestamp for the last time this vCard was updated. This property is automatic, you cannot modify it manually"];
+
+function ProperDate(x){
+	const d = new Date();
+	if(x==1){return ""+d.toISOString().split('T')[0].replace(/-/g, '')+d.toTimeString().split(' ')[0].replace(/:/g, '');}	// Format YYYYMMDDHHMMSS
+	if(x==2){return	d.toISOString().replace(/[-:|.]/g, '').slice(0, 15)+d.toISOString().replace(/[-:|.]/g, '').slice(18);}	// Format YYYYMMDDTHHMMSSZ																																					
+}
+
+function Parshow(){																											// Switch between making parameters visible or hidden
+	if(par==0){																												// If parameters are hidden
+		par=1; tp="Hide Parameters";																						// Update flag to show them and opposite button
+		for(i=0;i<contacts.length-1;i++){																					// Make parameter cells visible
+			for(y=0;y<=33;y++){																								// Make parameter cells visible
+				for(o=1;o<=NB[y];o++){document.getElementById(""+CODE[y]+"p"+o+"."+i).className="para1";}					// Make parameter cells visible
+			}
+		}
+	}	
+	else if(par==1){																										// If parameters are visible
+		par=0; tp="Show Parameters";																						// Update flag to hide them and opposite button
+		for(i=0;i<contacts.length-1;i++){																					// Make parameter cells invisible
+			for(y=0;y<=33;y++){																								// Make parameter cells invisible
+				for(o=1;o<=NB[y];o++){document.getElementById(""+CODE[y]+"p"+o+"."+i).className="para0";}					// Make parameter cells invisible
+			}
+		}
+	}																			
+	document.getElementById("para").innerHTML="<button class='button4' onclick='Parshow()'>"+tp+"</button>";				// Update the button text accordingly
+}
+
+function Check(g){
+	if(g==0){for(i=0;i<contacts.length-1;i++){for(y=0;y<=33;y++){for(o=1;o<=NB[y];o++){Ccheck(i,y,o);}}}}					// Global check
+	else{var a = g.charAt(3); var b = CODE.indexOf(g.charAt(0)); var c = g.charAt(1); Ccheck(a,b,c);}						// Individual check
+	
+	function Ccheck(q,s,d){																									// Format-checking function
+		var chk = document.getElementById(""+CODE[s]+d+"."+q).value; 														// Value to check
+		var red = 0;																										// Flag for putting in red or not
+		if(s==0 && chk =="")																			{red=1;}			// FN must not be empty
+		if(s==2 && chk.includes("@")==false && chk != "")												{red=1;}			// Mail must contain @ 
+		if(s==6 && chk.includes("ftp:")==false && chk.includes("http")==false && chk != "")				{red=1;}			// FBURL must be a URL so it must contain http
+		if(s==3 && (chk.match(/;/g) || []).length != 4 && chk != "")									{red=1;}			// ADR must have 4 ;
+		if(s==13 && chk!="application" && chk!="individual" && chk!="group" && chk!="location" && chk!="organization" && chk.includes("x-")==false && chk != "")			{red=1;}	// KIND	must be either "application", "individual", "group", "location", "organization" or an "x-" value
+		if(s==15 && chk.includes("mailto")==false && chk.includes("http")==false && chk != "")			{red=1;}			// CALADURI	must be mailto or http(s)
+		if(s==16 && chk.includes("ftp:")==false && chk.includes("http")==false && chk != "")			{red=1;}			// CALURI must be http(s) or ftp
+		if(s==26 && chk.includes("ldap")==false && chk.includes("http")==false && chk != "")			{red=1;}			// SOURCE must be http(s) or ldap
+		if(s==30 && chk.includes("http")==false && chk != "")											{red=1;}			// URL must contain http(s)
+		
+		if(red==1){document.getElementById(""+CODE[s]+d+"."+q).className="para2";}											// If error, red background
+		else{document.getElementById(""+CODE[s]+d+"."+q).className="";}														// If no error, normal class
+	}
+	
+	var hm = document.getElementsByClassName('para2').length;																// Check if there are any red cells
+	tw="<h4>Elements with red background are badly formatted.<br>Check column headers' tooltips for formatting info.</h4>"	// Warning text
+	if(hm == 0){document.getElementById("warn").innerHTML="";}																// If no red cells, no warning is displayed
+	else{document.getElementById("warn").innerHTML=tw;}																		// If there are red cells, display the warning
+}
+
+function Rebuild(z){																										// Rebuild the contact list from the board
+	var CARD = "";																											// Text container for a vCard
+	for (i=0;i<contacts.length-1;i++){																						// For each contact
+		var ts="BEGIN:VCARD\r\n";																							// Standard vCard beginning
+		ts+="VERSION:4.0\r\n";																								// vCard version
+		ts+="FN"+document.getElementById("Np1."+i).value+":"+document.getElementById("N1."+i).value+"\r\n";					// Add Name property
+
+		for(y=1;y<=32;y++){Build(PROP[y],CODE[y],y);}																		// ***Build each property for the contact***
+		
+		function Build(s,l,n){																								// Build a contact from the cells
+			for(o=1;o<=NB[n];o++){																							// For each entry of this property
+				var tt = "";																								// Temporary storable while building the property
+				var paracont = document.getElementById(""+l+"p"+o+"."+i).value;												// Get the content of the parameters cell
+				var cellcont = document.getElementById(""+l+o+"."+i).value;													// Get the content of the cell
+				if(cellcont != ''){																							// If the cell is not empty
+					if(l=="A" && (cellcont.match(/;/g) || []).length==4){tt+=""+s+paracont+":;;"+cellcont+"\r\n";}			// Add the correct number of ; back into ADR
+					else if(l=="E")										{tt+=""+s+paracont+":geo:"+cellcont+"\r\n";}		// Add the geo: back in GEO
+					else												{tt+=""+s+paracont+":"+cellcont+"\r\n";}			// Add the property and the value of the cell
+					if(z==2 && tt.length>75){tt = "P"+tt.slice(1).replace(/(.{73})/g,"$&"+"\r\n ");}						// If it's a Rebuild to file, fold lines >75 chars as per standard
+					ts+=tt;																									// Add the new property to the card
+				}
+			}
+		}
+
+		if(NB[33]>0 && document.getElementById("Ê1"+"."+i).value != ''){													// Special build for REV 
+			if(init==0){ts+="REV:"+document.getElementById("Ê1"+"."+i).value+"\r\n";}										// If we just loaded a file, re-write as it was
+			else{
+				tmp="REV:"+document.getElementById("Ê1"+"."+i).value+"\r\n";												// Get the current REV
+				var a1= ""+savecont[i].toString().replace(/^\s+|\s+$/g, '').replace(/(\r\n|\n|\r)/gm, "");					// Get the original state of this contact 
+				var a2= ""+(ts+tmp).toString().replace(/^\s+|\s+$/g, '').replace(/(\r\n|\n|\r)/gm, "");						// Get the current state of this contact					
+				if(a1 == a2){ts+="REV:"+document.getElementById("Ê1"+"."+i).value+"\r\n";}									// If no change, keep old REV
+				else		{ts+="REV:"+ProperDate(2)+"\r\n";}																// If change, write new REV
+			}
+		}
+		
+		if(NB[32]>0 && document.getElementById("Q1"+"."+i).value != ''){													// Special build for PRODID
+			if(init==1){																									// If we just loaded a file, do nothing
+				var a1= ""+savecont[i].toString().replace(/^\s+|\s+$/g, '').replace(/(\r\n|\n|\r)/gm, "");					// Get the original state of this contact
+				var a2= ""+ts.toString().replace(/^\s+|\s+$/g, '').replace(/(\r\n|\n|\r)/gm, "");							// Get the current state of this contact
+				if(a1 != a2){																								// If there is a change
+					oldid= ts.split("\nPRODID").pop().split('\n')[0];														// Identify the old PRODID
+					ts = ts.replace("\nPRODID"+oldid, "\nPRODID:https://jordi.ws/vcm");										// Replace by my PRODID
+				}
+			}	
+		}
+
+		CARD+=ts+"END:VCARD\r\n";
+	}
+	return CARD;
+}
+ 
+function saveTextAsFile(){
+	var tsv="vCard "+ProperDate(1)+".vcf";
+    var textToSave = Rebuild(2); 
+    var textToSaveAsBlob = new Blob([textToSave], {type:"text/plain"});
+    var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+    var fileNameToSaveAs = tsv;
+    var downloadLink = document.createElement("a");
+    downloadLink.download = fileNameToSaveAs;
+    downloadLink.innerHTML = "Download File";
+    downloadLink.href = textToSaveAsURL;
+    downloadLink.onclick = function(event){document.body.removeChild(event.target);};
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+}
+
+
+function loadVCF() {
+	init = 0;
+	par=0;
+	document.getElementById("para").innerHTML="<button class='button4' onclick='Parshow()'>Show Parameters</button>";		// Display parameters button
+    var fileToLoad = document.getElementById("UPVCF").files[0];
+    var fileReader = new FileReader();
+    fileReader.onload = function(fileLoadedEvent) 
+    {
+        var textFromFileLoaded = fileLoadedEvent.target.result;
+		
+		var QP=";CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE";																	// Define the Quoted-Printable string as QP
+		while(textFromFileLoaded.includes(QP)==true){																		// As long as there are QP in the data
+			conv1 = textFromFileLoaded.split(QP).pop().split('\n')[0];														// conv1 is what is in between QP and a new line
+			while(textFromFileLoaded.includes(QP+conv1+"\n"+"=")==true){													// While there are broken lines with QP characters on both lines
+				textFromFileLoaded = textFromFileLoaded.replace(QP+conv1+"\n"+"=", QP+conv1);								// Remove broken line and put it all on the same line
+				conv1 = textFromFileLoaded.split(QP).pop().split('\n')[0];													// conv1 becomes the new full chain that previous took 2 lines
+			}
+			conv2 = conv1.replace(/[\r\n]/g, "");																			// In case there are remaining broken lines, remove them
+			conv3 = conv2.replace(/=/g, "%");																				// Replace all = by % 
+			conv3 = decodeURI(conv3);																						// Decode the string so it can be displayed
+			textFromFileLoaded = textFromFileLoaded.replace(QP+conv1, conv3);												// Replace the QP by the new well-formatted string
+		}
+	
+		textFromFileLoaded = textFromFileLoaded.replace(/'/g, "’");															// Replace the ' with an apostrophe that doesn't escape parsing
+		textFromFileLoaded = textFromFileLoaded.replace(/\r\n\r\n/g, "\n");													// Remove empty lines
+		textFromFileLoaded = textFromFileLoaded.replace(/\r\n\t/g, "");														//Rebuild the folded lines as long lines (tab case)
+		textFromFileLoaded = textFromFileLoaded.replace(/\r\n /g, "");														//Rebuild the folded lines as long lines (space case)
+		
+		while(textFromFileLoaded.includes("AGENT:BEGIN:VCARD")==true){														// Filter "AGENT" that is not supporter in V4
+			del=textFromFileLoaded.split('AGENT:BEGIN:VCARD').pop().split('END:VCARD')[0];									// Filter "AGENT" that is not supporter in V4
+			textFromFileLoaded = textFromFileLoaded.replace("AGENT:BEGIN:VCARD"+del+"END:VCARD\n", "");						// Filter "AGENT" that is not supporter in V4
+		}																													// Filter "AGENT" that is not supporter in V4
+		
+		contacts = textFromFileLoaded.split("END:VCARD");
+		LoadBoard();
+    };
+    fileReader.readAsText(fileToLoad, "utf-8");
+}
+
+
+function Parsimonie(s,l,n){														
+	for (i=0;i<contacts.length-1;i++){																						// Count max number of each field		
+		num = (contacts[i].match(new RegExp('\n'+s, "g")) || []).length;													// Count max number of each field			
+		if(num>NB[n]){NB[n]=num;}																							// Count max number of each field		
+	}																														// Count max number of each field
+	
+	for(c=1;c<=NB[n];c++){																									// Create columns
+		if(l=="P"){txt+="<td></td>";}																						// Extra column for visualization button of PHOTOS
+		txt+="<td></td><td><button class='button1' onclick='RemCol("+idc+")'>X</button> "; 									// Create columns
+		txt+="<div class='tip'>"+s+"<span class='tiptxt'>"+Tips[n]+"</span></div></td>"; 									// Add tooltips
+		idt[idc]=""+l+c; 																									// Create columns
+		idc++;																												// Create columns
+	}
+}
+
+function Parse(a,b,c){																										// Parser for entries, need: VCF code, ID letter, Max n° of items
+	cpt = (contacts[i].match(new RegExp("\n"+a, "g")) || []).length;														// Count number of [type a] entries for this contact
+	if(cpt>0){																												// If there is at least one [type a] entry	
+		add=[];																												// Temporary storage to reverse the order
+		for(j=1;j<=cpt;j++){																								// For each [type a] entry
+			ign=contacts[i].split(a).pop().split(':')[0]; 																	// Ignore the label
+			k=cpt-(j-1);																									// [type a] entry position
+			var val=contacts[i].split(a+ign+":").pop().split('\n')[0];														// Content of the cell
+			if(b=="A" && val.substring(0, 2)==";;"){val=val.slice(2);}														// Don't show the first two empty fields of ADR
+			if(b=="E"){val=val.replace("geo:","").replace(";",",");}														// Don't show the geo: in GEO and convert ; to , for V4 standard
+			var ro="<td>"; 																									// Create new cell
+			ro+="<input class='para"+par+"' id='"+b+"p"+k+"."+i+"' value='"+ign+"' /></td><td>";							// Add parameters
+			if(b=="P"){																										// Special options for images
+				ro+="<button class='button2'>👁 <img src='"+val+"'/></button></td><td> ";									// Option for Photo visualization button
+				if(val.includes("data:image")==false && val.includes("http")==false){val="data:image;base64,"+val;}			// Add base64 header if missing
+			}								
+			ro+="<input onchange='Check(this.id)'"; if(b=="Ê" || b=="Q"){ro+="readonly ";}									// Option for read-only properties
+			add[k]=""+ro+" id='"+b+k+"."+i+"'value='"+val+"'/></td>";														// Add new [type a] entry
+			rem=contacts[i].split(a).pop().split('\n')[0];																	// Remove this entry from the working string
+			contacts[i]=contacts[i].replace(a+rem+"\n", "");																// Remove this entry from the working string
+		}
+		for(j=1;j<=cpt;j++){txt+=add[j];}																					// Reorder the entries
+	}
+	diff = c - cpt;																											// Compute number of empty entries
+	if(diff>0){																												// Fill empty entries
+		for(m=1;m<=diff;m++){																								// Fill empty entries
+			n=c-diff+m; 																									// Fill empty entries
+			txt+="<td>";																									// Create new cell
+			txt+="<input class='para"+par+"' id='"+b+"p"+n+"."+i+"' value='' /></td><td>";									// Add parameters if needed
+			if(b=="P"){txt+="<button class='button3'>&nbsp;</button></td><td> ";}											// Placeholder Photo visualization button
+			txt+="<input onchange='Check(this.id)'"; if(b=="Ê" || b=="Q"){txt+="readonly ";}								// Option for read-only properties
+			txt+="id='"+b+n+"."+i+"'value=''/></td>";}																		// Add empty value with correct ID
+	}					
+}
+
+function RemLine(a){																										// Remove a contact (line)
+	var textupdate = Rebuild(1); 																							// Rebuild contact list from the board
+	contacts = textupdate.split("END:VCARD");																				// Recreate the updated contacts array
+	contacts.splice(a,1); 																									// Remove the selected contact
+	LoadBoard();																											// Recreate the board
+}
+
+function RemCol(a){																											// Remove a property (column)
+	code = idt[a];																											// Find the ID of the deleted column
+	for (i=0;i<contacts.length-1;i++){document.getElementById(code+"."+i).value="";}										// Make all cells with that ID blank
+	var textupdate = Rebuild(1);																							// Rebuild contact list from the board
+	contacts = textupdate.split("END:VCARD");																				// Recreate the updated contacts array
+	LoadBoard();																											// Recreate the board
+}
+
+function LoadBoard(){
+	if(init==1){savecont = contacts.slice();}																				// Save the original state of contacts
+	for(i=0;i<40;i++){NB[i]=0; NB[0]=1;}																					// Reset number of items 
+	idc=1;																													// Reset number of items
+	txt="<table><tr><td></td><td></td><td>Name</td>";																		// Create columns
+	for(y=1;y<=33;y++){Parsimonie(PROP[y],CODE[y],y);}																		// ***Count fields and create columns***
+	txt+="</tr>";																											// Close title row
+
+	for (i=0;i<contacts.length-1;i++){	
+		txt+="<tr><td><button class='button1' onclick='RemLine("+i+")'>X</button></td>";									// Add button to remove the line
+	
+		var fnami = "", nami = "";																							// Variable for potential names
+		if(contacts[i].includes("\nFN")==true){																				// If a FN is found
+			ign1 = contacts[i].split('\nFN').pop().split(':')[0];															// Parsing FN (separate parameters)
+			fnami = contacts[i].split('FN'+ign1+":").pop().split('\n')[0];													// Parsing FN
+		}
+		if(contacts[i].includes("\nN")==true){																				// If a N is found
+			ign2=contacts[i].split('\nN').pop().split(':')[0]; 																// Parsing N (separate parameters)
+			n2 = (contacts[i].split('N'+ign2+":").pop().split('\n')[0]).split(";");											// Obtain the N string and split it on its 4 ";"
+			nami = (""+n2[3]+" "+n2[1]+" "+n2[2]+" "+n2[0]+" "+n2[4]).trim().replace("  ", " ");							// Create a FN from the N elements
+		}
+		txt+="<td><input class='para"+par+"' id='Np1."+i+"' value='";														// Create parameter cell
+		var os="onchange='Check(this.id)'";																					// Onchange bit
+		if(fnami != "")		{txt+=""+ign1+"' /></td><td><input "+os+" id='N1."+i+"'value='"+fnami+"'/></td>";}				// If FN is not empty, use this name
+		else if(nami != "")	{txt+=""+ign2+"' /></td><td><input "+os+" id='N1."+i+"'value='"+nami+"'/></td>";}				// Else if N is not empty, use this name
+		else				{txt+=""+"' /></td><td><input "+os+" id='N1."+i+"'value='???'/></td>";}							// If nothing is found, put "???" as name
+			
+		for(y=1;y<=33;y++){Parse(PROP[y],CODE[y],NB[y]);}																	// ***Parse all properties***
+		
+		txt+="</tr>";
+	}
+	txt+="</table>";																										// Close the board
+	document.getElementById("board").innerHTML=txt;																			// Display the board
+	if(init==1) {Check(0);}
+	
+	if(init==0){																											// Rebuild to save initial state
+		var textupdate = Rebuild(1);																						// Rebuild contact list from the board
+		contacts = textupdate.split("END:VCARD");																			// Recreate the updated contacts array
+		savecont = contacts.slice();																						// Save the original state of contacts
+		init = 1;																											// It's not a first load anymore
+		LoadBoard();																										// Reload the board
+	}
+}
+</script>
+</body>
+</html>
